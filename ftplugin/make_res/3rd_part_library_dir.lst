@@ -1,0 +1,25 @@
+# NOTE
+# 1) 本文件内的条目可以随处添加：
+# 2) 以井号开头的是注释
+# 3) include:之后的非注释行，按头文件目录入口处理；
+# 4) lib:之后的非注释行，按库文件目录入口处理；
+# 5) 标记、入口行都需要顶格写！
+# 6) 要使用trailing空格！
+# 7) 忽略第一个include:和lib:标记之前的目录入口
+
+# e.g. 下面这个入口将被脚本(ftplugin/make.vim)忽略
+$(PATH)
+
+include:
+$(SSS_INC)
+$(BOOST_INC)
+
+lib:
+$(SSS_LIB)
+$(BOOST_LIB)
+$(PTHREAD_LIB)
+
+# 示例：入口可以直接写在标记后面
+include:C:\Loki\loki-0.1.6\include
+# 示例：以最后出现的标记为入口类型
+lib:include:$(PTHREAD_INC)
