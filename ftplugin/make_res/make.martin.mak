@@ -1,13 +1,13 @@
 ###############################################################################
-# Martin°æ±¾Ô´´úÂë - from msys-cn
-# Í¨ÓÃÒÀÀµ¹ØÏµÇý¶¯ MAKEFILE for MSYS
+# Martinç‰ˆæœ¬æºä»£ç  - from msys-cn
+# é€šç”¨ä¾èµ–å…³ç³»é©±åŠ¨ MAKEFILE for MSYS
 #
-# µ±Ç°Ö§³ÖµÄ´úÂë¸ñÊ½:
+# å½“å‰æ”¯æŒçš„ä»£ç æ ¼å¼:
 #  *.s, *.c, *.cpp, *.f, *.rc, *.m, *.go
 #
 # PROVIDED WITH NO WARRANTY OF ANY KIND, AND NO COPYRIGHT RESTRICTIONS
 ###############################################################################
-# ¹¤¾ßÁ´ÅäÖÃ£¨¿ÉÒÔÐÞ¸Ä£¬±ÈÈç C ÓïÑÔ LD=gcc£¬C++ ÓïÑÔ LD=g++ µÈµÈ
+# å·¥å…·é“¾é…ç½®ï¼ˆå¯ä»¥ä¿®æ”¹ï¼Œæ¯”å¦‚ C è¯­è¨€ LD=gccï¼ŒC++ è¯­è¨€ LD=g++ ç­‰ç­‰
 PP=cpp
 AS=as
 CC=gcc
@@ -19,7 +19,7 @@ MC=windmc
 8L=8l
 LD=gcc
 DB=insight
-# ±àÒëÆ÷ÅäÖÃ£¨ÕâÀï»ù±¾²»ÐèÒªÐÞ¸Ä£¬ÊìÏ¤±àÒë²ÎÊýµÄÓÃ»§¿ÉÒÔ×ÃÇéÐÞ¸Ä£©
+# ç¼–è¯‘å™¨é…ç½®ï¼ˆè¿™é‡ŒåŸºæœ¬ä¸éœ€è¦ä¿®æ”¹ï¼Œç†Ÿæ‚‰ç¼–è¯‘å‚æ•°çš„ç”¨æˆ·å¯ä»¥é…Œæƒ…ä¿®æ”¹ï¼‰
 INCLUDE=
 ASFLAGS=$(INCLUDE) -g
 CCFLAGS=$(INCLUDE) -g
@@ -29,11 +29,11 @@ FCFLAGS=$(INCLUDE) -g
 8LFLAGS=$(INCLUDE) -g
 RCFLAGS=
 LDFLAGS=
-# ÎÄ¼þ¶ÔÏó£¨´´½¨ÏîÄ¿Ö»ÐèÒªÐÞ¸ÄÕâÀï£¬ÏÂÃæÊÇ¾ÙÀý£©
-OBJECT=Main.o     # ÌîÐ´Ô´´úÂëMain.cpp¶ÔÓ¦Éú³ÉµÄ.oÎÄ¼þÃû£¬ºóÃæ¿ÉÒÔ¼ÌÐøÌí¼Ó£¬ÓÃ \ »»ÐÐ
-TARGET=App.exe    # ÌîÐ´Á´½ÓËùÓÐ.oÎÄ¼þºó×îÖÕÉú³ÉµÄexeÎÄ¼þÃû
+# æ–‡ä»¶å¯¹è±¡ï¼ˆåˆ›å»ºé¡¹ç›®åªéœ€è¦ä¿®æ”¹è¿™é‡Œï¼Œä¸‹é¢æ˜¯ä¸¾ä¾‹ï¼‰
+OBJECT=Main.o     # å¡«å†™æºä»£ç Main.cppå¯¹åº”ç”Ÿæˆçš„.oæ–‡ä»¶åï¼ŒåŽé¢å¯ä»¥ç»§ç»­æ·»åŠ ï¼Œç”¨ \ æ¢è¡Œ
+TARGET=App.exe    # å¡«å†™é“¾æŽ¥æ‰€æœ‰.oæ–‡ä»¶åŽæœ€ç»ˆç”Ÿæˆçš„exeæ–‡ä»¶å
 DEPEND=$(OBJECT:.o=.dep)
-# ±àÒëÃüÁî£¨ÕâÀïÌá¹©ÁË±ê×¼µÄÃüÁî£¬ÊìÏ¤µÄÓÃ»§¿ÉÒÔ×ÔÐÐÌí¼Ó£©
+# ç¼–è¯‘å‘½ä»¤ï¼ˆè¿™é‡Œæä¾›äº†æ ‡å‡†çš„å‘½ä»¤ï¼Œç†Ÿæ‚‰çš„ç”¨æˆ·å¯ä»¥è‡ªè¡Œæ·»åŠ ï¼‰
 all : $(TARGET)
 	@$(RM) $(DEPEND)
 $(TARGET) : $(OBJECT)
@@ -44,7 +44,7 @@ run: all
 	@$(TARGET)
 clean:
 	@$(RM) $(OBJECT) $(DEPEND) $(TARGET)
-# ±ê×¼´¦Àí¹ý³Ì£¨ÒÔÏÂÄÚÈÝÎªÄÚ²¿»úÖÆ£¬ÓÃ»§ÇëÎðÐÞ¸Ä£©
+# æ ‡å‡†å¤„ç†è¿‡ç¨‹ï¼ˆä»¥ä¸‹å†…å®¹ä¸ºå†…éƒ¨æœºåˆ¶ï¼Œç”¨æˆ·è¯·å‹¿ä¿®æ”¹ï¼‰
 %.dep : %.s
 	@$(PP) $(INCLUDE) -MM -MT $(@:.dep=.o) -o $@ $<
 %.dep : %.c

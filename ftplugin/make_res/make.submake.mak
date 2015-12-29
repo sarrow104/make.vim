@@ -2,15 +2,15 @@
 # Reference http://www.gnu.org/software/make/manual/make.html
 #
 
-# ĞèÒªÅÅ³ıµÄÄ¿Â¼
+# éœ€è¦æ’é™¤çš„ç›®å½•
 exclude_dirs := include bin
 
-# È¡µÃµ±Ç°×ÓÄ¿Â¼Éî¶ÈÎª1µÄËùÓĞÄ¿Â¼Ãû³Æ
+# å–å¾—å½“å‰å­ç›®å½•æ·±åº¦ä¸º1çš„æ‰€æœ‰ç›®å½•åç§°
 dirs := $(shell find . -maxdepth 1 -type d)
 dirs := $(basename $(patsubst ./%,%,$(dirs)))
 dirs := $(filter-out $(exclude_dirs),$(dirs))
 
-# ±ÜÃâclean×ÓÄ¿Â¼²Ù×÷Í¬Ãû£¬¼ÓÉÏ_clean_Ç°×º
+# é¿å…cleanå­ç›®å½•æ“ä½œåŒåï¼ŒåŠ ä¸Š_clean_å‰ç¼€
 SUBDIRS := $(dirs)
 
 clean_dirs := $(addprefix _clean_,$(SUBDIRS) )
@@ -18,13 +18,13 @@ clean_dirs := $(addprefix _clean_,$(SUBDIRS) )
 
 .PHONY: subdirs $(SUBDIRS) clean
 
-# Ö´ĞĞÄ¬ÈÏmake target
+# æ‰§è¡Œé»˜è®¤make target
 $(SUBDIRS):    
 	$(MAKE) -C $@
 
 subdirs: $(SUBDIRS)
 
-# Ö´ĞĞclean
+# æ‰§è¡Œclean
 $(clean_dirs):    
 	$(MAKE) -C $(patsubst _clean_%,%,$@) clean
 

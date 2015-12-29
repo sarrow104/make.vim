@@ -554,5 +554,5 @@ function! Make_Omni_Complete(findstart, base) " {{{1
 	endif
     endif
 endfun
-setlocal omnifunc=Make_Omni_Complete
+setlocal completefunc=Make_Omni_Complete
 
