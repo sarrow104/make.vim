@@ -3,6 +3,8 @@ TARGET_NAME = $DIRNAME$
 # outputdir
 DEBUG = Debug
 RELEASE = Release
+CC=g++
+SRC_EXT=cpp
 
 #final target
 EXT =#.exe
@@ -21,7 +23,7 @@ LDFLAGS = $(LD_BASE_FLAGS)
 LD_DEBUG_FLAGS =
 LD_RELEASE_FLAGS =
 
-SOURCES = $(wildcard *.cpp)
+SOURCES = $(wildcard *.$(SRC_EXT))
 RC_FILE = $(wildcard *.rc)
 
 .PHONY: all
@@ -56,34 +58,34 @@ clean:
 # .PHONY: build
 # build: TARGET_NAME=HelloWorld$(MODULE_BLD_TYPE)
 # build: TARGET_BUILD_DIR=$(PROJECT_ROOT_DIR)/$(OUT_DIR)
-# build: TARGET_BUILD_OBJS=$(addprefix $(TARGET_BUILD_DIR)/,$(SOURCES:.cpp=.o))
+# build: TARGET_BUILD_OBJS=$(addprefix $(TARGET_BUILD_DIR)/,$(SOURCES:.$(SRC_EXT)=.o))
 # build: $(TARGET_NAME)
 # 见：
 # http://stackoverflow.com/questions/4035013/using-gnu-make-to-build-both-debug-and-release-targets-at-the-same-time
-DEBUG_OBJECTS = $(addprefix $(PROJECT_ROOT_DIR)/$(DEBUG)/,$(SOURCES:.cpp=.o))
+DEBUG_OBJECTS = $(addprefix $(PROJECT_ROOT_DIR)/$(DEBUG)/,$(SOURCES:.$(SRC_EXT)=.o))
 DEBUG_RC      = $(addprefix $(PROJECT_ROOT_DIR)/$(DEBUG)/,$(RC_FILE:.rc=.res))
 
-RELEASE_OBJECTS = $(addprefix $(PROJECT_ROOT_DIR)/$(RELEASE)/,$(SOURCES:.cpp=.o))
+RELEASE_OBJECTS = $(addprefix $(PROJECT_ROOT_DIR)/$(RELEASE)/,$(SOURCES:.$(SRC_EXT)=.o))
 RELEASE_RC      = $(addprefix $(PROJECT_ROOT_DIR)/$(RELEASE)/,$(RC_FILE:.rc=.res))
 
 $(DEBUG_TARGET): $(DEBUG_OBJECTS) $(DEBUG_RC)
 $(RELEASE_TARGET): $(RELEASE_OBJECTS) $(RELEASE_RC)
 
 $(DEBUG_TARGET):
-	g++ -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 $(RELEASE_TARGET):
-	g++ -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS)
 	strip $@
 
-$(DEBUG_OBJECTS): $(PROJECT_ROOT_DIR)/$(DEBUG)/%.o: %.cpp
+$(DEBUG_OBJECTS): $(PROJECT_ROOT_DIR)/$(DEBUG)/%.o: %.$(SRC_EXT)
 $(DEBUG_RC): $(PROJECT_ROOT_DIR)/$(DEBUG)/%.res: %.rc
-$(RELEASE_OBJECTS): $(PROJECT_ROOT_DIR)/$(RELEASE)/%.o: %.cpp
+$(RELEASE_OBJECTS): $(PROJECT_ROOT_DIR)/$(RELEASE)/%.o: %.$(SRC_EXT)
 $(RELEASE_RC): $(PROJECT_ROOT_DIR)/$(RELEASE)/%.res: %.rc
 
 %.o:
 	@mkdir -p $(O_DIR) && echo mkdir $(O_DIR)
-	g++ -o $@ -c $< $(CXXFLAGS)
+	$(CC) -o $@ -c $< $(CXXFLAGS)
 
 %.res:
 	windres -O COFF -i $< -o $@
