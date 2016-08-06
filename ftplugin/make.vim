@@ -364,6 +364,11 @@ if !exists("g:Mingw_tool_para_dict") " {{{1
     let g:Mingw_tool_para_dict['ar'] = ['rus']
 endif
 
+" NOTE:
+" 这是补全路径用的，比如 -L 和 -I 
+" 这个没必要从环境变量中生成；
+" 因为，你既然使用了环境变量，那么编译器、连接器
+" 都能读取到该信息！
 if !exists("g:Mingw_usr_library_dirs") " {{{1
     let g:Mingw_usr_library_dirs = {}
 
@@ -449,7 +454,56 @@ if !exists("g:Mingw_make_functions") " {{{1
 endif
 
 if !exists("g:Mingw_usr_libs") " {{{1
-    let g:Mingw_usr_libs = readfile(g:Mingw_usr_lib_file)
+    " NOTE:
+    " gcc
+    " 在链接时候，库的查找路径分为两部分；一部分是由LIBRARY_PATH环境变量控制
+    " 一部分是由ld工具控制——通过ld --verbose可以查询；
+    " http://stackoverflow.com/questions/9922949/how-to-print-the-ldlinker-search-path
+    " 环境变量LIBRARY_PATH的优先级更高——这样，便可以覆盖系统原本的库了。
+    " 另外一种获取方式，是通过
+    "   gcc -print-search-dirs
+    " ；它会自动将LIBRARY_PATH的问题，也考虑进来
+    "
+    " 另外 LIBRARY_PATH 和 LD_LIBRARY_PATH
+    " 的区别在于，前者管编译时，连接器如何找库；后者管运行时，加载器如何找库；
+    " http://stackoverflow.com/questions/4250624/ld-library-path-vs-library-path
+    " 另外，《影响gcc的环境变量列表》
+    " https://gcc.gnu.org/onlinedocs/gcc/Environment-Variables.html
+    if exists("$LIBRARY_PATH") && len(expand("$LIBRARY_PATH")) > 0
+        let g:Mingw_usr_libs = []
+
+        let libraries = ''
+        for paths in split(system("gcc -print-search-dirs"), "\n")
+            if match(paths, '^libraries: =') != -1
+                let libraries = strpart(paths, 12)
+                break
+            endif
+        endfor
+        for path in split(libraries, ':')
+            if len(path) && path[0] == '.'
+                continue
+            endif
+            let current_list  = split(globpath(path, "lib*.a"), "\n")
+            call map(current_list, 'fnamemodify(v:val, ":t")')
+            call map(current_list, '"-l".strpart(v:val, 3, len(v:val) - 5)')
+            call extend(g:Mingw_usr_libs, current_list)
+        endfor
+        "        let library_entrys = split(expand("$LIBRARY_PATH"), ':')
+        "        let library_entrys2 = split(substitute(system("ld --verbose \| grep SEARCH_DIR \| tr -s ' ;' '\n'"), 'SEARCH_DIR("\%(=\)\?\|")', '', 'g'), "\n")
+        "        call extend(library_entrys, library_entrys2)
+        "        for entry in library_entrys
+        "            if !isdirectory(entry)
+        "                continue
+        "            endif
+        "            let current_list  = split(globpath(entry, "lib*.a"), "\n")
+        "            call map(current_list, 'fnamemodify(v:val, ":t")')
+        "            call map(current_list, '"-l".strpart(v:val, 3, len(v:val) - 5)')
+        "            call extend(g:Mingw_usr_libs, current_list)
+        "        endfor
+    else
+        let g:Mingw_usr_libs = readfile(g:Mingw_usr_lib_file)
+    endif
+    call sort(g:Mingw_usr_libs)
 endif
 
 " 补全参数
