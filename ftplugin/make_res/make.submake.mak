@@ -16,13 +16,13 @@ SUBDIRS := $(dirs)
 clean_dirs := $(addprefix _clean_,$(SUBDIRS) )
 #
 
-.PHONY: subdirs $(SUBDIRS) clean
+.PHONY: all $(SUBDIRS) clean
+
+all: $(SUBDIRS)
 
 # 执行默认make target
 $(SUBDIRS):    
 	$(MAKE) -C $@
-
-subdirs: $(SUBDIRS)
 
 # 执行clean
 $(clean_dirs):    
